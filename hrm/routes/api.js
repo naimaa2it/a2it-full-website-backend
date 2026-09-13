@@ -23,6 +23,7 @@ const miscellaneousExpense = require("../controller/miscellaneousController");
 const mealController = require("../controller/mealController");
 const notificationController = require("../controller/notificationController");
 const taskController = require("../controller/taskController");
+const dataManagementController = require("../controller/dataManagementController");
 const upload = require("../middleware/multer");
 const uploadExcel = require("../middleware/uploadExcel");
 const { protect, adminOnly, requireRole } = require("../middleware/AuthVerifyMiddleWare");
@@ -1552,6 +1553,45 @@ router.delete(
   protect,
   adminOnly,
   notificationController.dismiss,
+);
+
+// =================== Data Management (Settings) ====================
+// Admin-only: month/year-wise data deletion with a 10-day trash bin.
+router.get(
+  "/admin/data/summary",
+  protect,
+  adminOnly,
+  dataManagementController.getDeletableSummary,
+);
+router.post(
+  "/admin/data/delete",
+  protect,
+  adminOnly,
+  dataManagementController.deleteData,
+);
+router.get(
+  "/admin/data/trash",
+  protect,
+  adminOnly,
+  dataManagementController.getTrash,
+);
+router.post(
+  "/admin/data/trash/:id/restore",
+  protect,
+  adminOnly,
+  dataManagementController.restoreTrash,
+);
+router.delete(
+  "/admin/data/trash/:id",
+  protect,
+  adminOnly,
+  dataManagementController.deleteTrashEntry,
+);
+router.delete(
+  "/admin/data/trash",
+  protect,
+  adminOnly,
+  dataManagementController.emptyTrash,
 );
 
 module.exports = router;
