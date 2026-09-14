@@ -10,6 +10,7 @@ const {
   uploadClientLogoImage,
   listPortfolioResources,
   listMediaResources,
+  listPublicGalleryResources,
   deletePortfolioResource,
 } = require("../controllers/uploadController");
 
@@ -48,6 +49,8 @@ router.post(
 );
 router.get("/portfolio/list", authMiddleware, listPortfolioResources);
 router.get("/media/list", authMiddleware, listMediaResources);
+// Public: powers the About page "Company Gallery" (no auth required).
+router.get("/gallery", listPublicGalleryResources);
 router.delete("/portfolio", authMiddleware, deletePortfolioResource);
 
 module.exports = router;

@@ -26,6 +26,7 @@ const CLOUDINARY_FOLDERS = {
   services: "a2it/services",
   users: "a2it/users",
   clients: "a2it/clients",
+  gallery: "a2it/gallery",
   general: "a2it/general",
 };
 
@@ -173,6 +174,51 @@ const listMediaResources = async (req, res) => {
   }
 };
 
+// Public gallery listing for the marketing site (About page "Company Gallery").
+// No auth: it only ever exposes images from the gallery/general folders that
+// admins upload from the dashboard. New uploads land in a2it/gallery; a2it/general
+// is included because earlier uploads (before the gallery folder existed) live there.
+const listPublicGalleryResources = async (req, res) => {
+  try {
+    const folders = ["a2it/gallery", "a2it/general"];
+
+    const lists = await Promise.all(
+      folders.map(async (prefix) => {
+        try {
+          const result = await cloudinary.api.resources({
+            type: "upload",
+            resource_type: "image",
+            prefix,
+            max_results: 500,
+          });
+          return result.resources || [];
+        } catch (err) {
+          console.error(`Error listing ${prefix}:`, err);
+          return [];
+        }
+      }),
+    );
+
+    const byId = new Map();
+    lists.flat().forEach((resource) => {
+      if (resource?.public_id) byId.set(resource.public_id, resource);
+    });
+
+    const resources = Array.from(byId.values()).sort((a, b) => {
+      const aTime = new Date(a.created_at || 0).getTime();
+      const bTime = new Date(b.created_at || 0).getTime();
+      return bTime - aTime;
+    });
+
+    return res.json({ success: true, resources });
+  } catch (error) {
+    console.error("Error listing public gallery resources:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Failed to list gallery" });
+  }
+};
+
 const deletePortfolioResource = async (req, res) => {
   try {
     const publicId = String(req.query.publicId || "").trim();
@@ -211,5 +257,6 @@ module.exports = {
   uploadClientLogoImage,
   listPortfolioResources,
   listMediaResources,
+  listPublicGalleryResources,
   deletePortfolioResource,
 };
