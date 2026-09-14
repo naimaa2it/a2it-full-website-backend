@@ -37,6 +37,8 @@ const updateSiteSettings = async (req, res) => {
       email,
       phone,
       address,
+      latitude,
+      longitude,
       social,
     } = req.body;
 
@@ -52,6 +54,10 @@ const updateSiteSettings = async (req, res) => {
     if (email !== undefined) settings.email = email;
     if (phone !== undefined) settings.phone = phone;
     if (address !== undefined) settings.address = address;
+    if (latitude !== undefined && latitude !== "")
+      settings.latitude = Number(latitude);
+    if (longitude !== undefined && longitude !== "")
+      settings.longitude = Number(longitude);
 
     if (social && typeof social === "object") {
       settings.social = {

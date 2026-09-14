@@ -35,6 +35,10 @@ const siteSettingsSchema = new mongoose.Schema(
       default: "Plot No 470\nRoad No 06\nDOHS Mirpur, Dhaka",
     },
 
+    // Map pin (Contact page office location)
+    latitude: { type: Number, default: 23.836236 },
+    longitude: { type: Number, default: 90.358672 },
+
     // Social links
     social: {
       facebook: {
