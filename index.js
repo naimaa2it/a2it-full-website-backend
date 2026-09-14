@@ -22,6 +22,7 @@ const rolesRoutes = require("./routes/roles");
 const blogRoutes = require("./routes/blog");
 const uploadRoutes = require("./routes/upload");
 const clientLogosRoutes = require("./routes/clientLogos");
+const siteSettingsRoutes = require("./routes/siteSettings");
 
 // HRM module (merged) — everything under /api/v1
 const hrmRoutes = require("./hrm/routes/api");
@@ -729,6 +730,9 @@ app.use("/api/upload", uploadRoutes);
 
 // Client showcase logo routes
 app.use("/api/client-logos", clientLogosRoutes);
+
+// Site-wide settings (logo, favicon, contact info, social links)
+app.use("/api/site-settings", siteSettingsRoutes);
 
 // ============================================
 // HRM API Routes (merged HRM system)

@@ -8,6 +8,7 @@ const {
   uploadPortfolioImage,
   uploadServiceImage,
   uploadClientLogoImage,
+  uploadSettingsImage,
   listPortfolioResources,
   listMediaResources,
   listPublicGalleryResources,
@@ -46,6 +47,12 @@ router.post(
   authMiddleware,
   upload.single("image"),
   uploadClientLogoImage,
+);
+router.post(
+  "/settings",
+  authMiddleware,
+  upload.single("image"),
+  uploadSettingsImage,
 );
 router.get("/portfolio/list", authMiddleware, listPortfolioResources);
 router.get("/media/list", authMiddleware, listMediaResources);
